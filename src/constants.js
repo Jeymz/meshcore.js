@@ -110,6 +110,7 @@ class Constants {
         NewAdvert: 0x8A, // when companion is set to manually add contacts
         TelemetryResponse: 0x8B,
         BinaryResponse: 0x8C,
+        ControlData: 0x8E,
     }
 
     static ErrorCodes = {

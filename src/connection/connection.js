@@ -416,6 +416,8 @@ class Connection extends EventEmitter {
             this.onNewAdvertPush(bufferReader);
         } else if(responseCode === Constants.PushCodes.BinaryResponse){
             this.onBinaryResponsePush(bufferReader);
+        } else if(responseCode === Constants.PushCodes.ControlData){
+            this.onControlDataPush(bufferReader);
         } else {
             console.log(`unhandled frame: code=${responseCode}`, frame);
         }
@@ -492,6 +494,22 @@ class Connection extends EventEmitter {
             reserved: bufferReader.readByte(), // reserved
             tag: bufferReader.readUInt32LE(), // 4 bytes tag
             responseData: bufferReader.readRemainingBytes(),
+        });
+    }
+
+    onControlDataPush(bufferReader) {
+        const lastSnr = bufferReader.readInt8() / 4;
+        const lastRssi = bufferReader.readInt8();
+        const pathLen = bufferReader.readUInt8();
+        const path = bufferReader.readBytes(pathLen);
+        const payload = bufferReader.readRemainingBytes();
+
+        this.emit(Constants.PushCodes.ControlData, {
+            lastSnr: lastSnr,
+            lastRssi: lastRssi,
+            pathLen: pathLen,
+            path: path,
+            payload: payload,
         });
     }
 
