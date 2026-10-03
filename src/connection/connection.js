@@ -501,14 +501,12 @@ class Connection extends EventEmitter {
         const lastSnr = bufferReader.readInt8() / 4;
         const lastRssi = bufferReader.readInt8();
         const pathLen = bufferReader.readUInt8();
-        const path = bufferReader.readBytes(pathLen);
         const payload = bufferReader.readRemainingBytes();
 
         this.emit(Constants.PushCodes.ControlData, {
             lastSnr: lastSnr,
             lastRssi: lastRssi,
             pathLen: pathLen,
-            path: path,
             payload: payload,
         });
     }
